@@ -32,7 +32,9 @@ const App = (props) => {
   }
 
   const getAdoptableKeys = () => {
-    fetch('http://localhost:3000/adoptable')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable`)
     .then(res => res.json())
     .then(obj => getAdoptableToken(obj.api_key, obj.secret_key))
   }
@@ -66,8 +68,9 @@ const App = (props) => {
   }
 
   const getFavoriteCats = () => {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
 
-    fetch('http://localhost:3000/cats', {
+    fetch(`${fetchUrl}/cats`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +86,9 @@ const App = (props) => {
   }
 
   const getAdoptableKeys2 = (faveCatArray) => {
-    fetch('http://localhost:3000/adoptable')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable`)
     .then(res => res.json())
     .then(obj => getAdoptableToken2(obj.api_key, obj.secret_key, faveCatArray))
   }
@@ -120,8 +125,9 @@ const App = (props) => {
           props.set_favorite_cats(faves)
         } else if (res.animal.status === "adopted") {
           alert(`${cat.name}, ${cat.petfinder_id} has been adopted`)
+          let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
 
-          fetch(`http://localhost:3000/cats/${cat.id}`, {
+          fetch(`${fetchUrl}/cats/${cat.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json',

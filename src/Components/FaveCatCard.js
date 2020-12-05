@@ -74,25 +74,13 @@ const CatCard = (props) => {
     </Avatar>
   )
 
-  // https://www.geeksforgeeks.org/program-distance-two-points-earth/
-  // Haversine formula
-  const twoDistance = (catLat, catLng, catObj) => {
-    let clickedKat = catObj
-
-    if (clickedKat !== undefined && clickedKat.distance === null && props.userLat !==0 && props.userLong !== 0) {
-      let calcDistance = Math.floor(3963.0 * Math.acos((Math.sin((catLat/(180/Math.PI))) * Math.sin((props.userLat/(180/Math.PI)))) + Math.cos((catLat/(180/Math.PI))) * Math.cos((props.userLat/(180/Math.PI))) * Math.cos((props.userLong/(180/Math.PI)) - (catLng/(180/Math.PI)))))
-      clickedKat.distance = calcDistance
-
-      props.set_clicked_cat(clickedKat)
-    }
-  }
-
   const getAdoptableKeys = (catObj, orgUrl) => {
 
     props.set_clicked_cat(catObj)
 
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
 
-    fetch('http://localhost:3000/adoptable')
+    fetch(`${fetchUrl}/adoptable`)
       .then(res => res.json())
       .then(obj => getAdoptableToken(obj.api_key, obj.secret_key, catObj, orgUrl))
   }
@@ -123,11 +111,100 @@ const CatCard = (props) => {
         getGoogleKey(catObj, res.organization)
         props.set_clicked_cat_org(res.organization)
       })
+      .catch(() => {
+        getAdoptableKeys2(catObj, orgUrl)
+      })
+  }
+
+  const getAdoptableKeys2 = (catObj, orgUrl) => {
+
+    props.set_clicked_cat(catObj)
+
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable2`)
+      .then(res => res.json())
+      .then(obj => getAdoptableToken2(obj.api_key, obj.secret_key, catObj, orgUrl))
+  }
+
+  const getAdoptableToken2 = (apiKey, secretKey, catObj, orgUrl) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => getOrgInfo2(token.access_token, catObj, orgUrl))
+  }
+
+  const getOrgInfo2 = (accessToken, catObj, orgUrl) => {
+    fetch(`https://api.petfinder.com${orgUrl}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+
+        getGoogleKey(catObj, res.organization)
+        props.set_clicked_cat_org(res.organization)
+      })
+      .catch(() => {
+        getAdoptableKeys3(catObj, orgUrl)
+      })
+  }
+
+  const getAdoptableKeys3 = (catObj, orgUrl) => {
+
+    props.set_clicked_cat(catObj)
+
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable3`)
+      .then(res => res.json())
+      .then(obj => getAdoptableToken3(obj.api_key, obj.secret_key, catObj, orgUrl))
+  }
+
+  const getAdoptableToken3 = (apiKey, secretKey, catObj, orgUrl) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => getOrgInfo3(token.access_token, catObj, orgUrl))
+  }
+
+  const getOrgInfo3 = (accessToken, catObj, orgUrl) => {
+    fetch(`https://api.petfinder.com${orgUrl}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+
+        getGoogleKey(catObj, res.organization)
+        props.set_clicked_cat_org(res.organization)
+      })
+      .catch((error) => {
+        console.log("error:", error)
+      })
   }
 
   const getGoogleKey = (catObj, catOrg) => {
 
-    fetch('http://localhost:3000/googlemaps')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/googlemaps`)
       .then(res => res.json())
       .then(obj => getGoogleAddress(catObj, catOrg, obj.api_key))
   }
@@ -187,6 +264,19 @@ const CatCard = (props) => {
     props.change_route('/faveinfo')
   }
 
+  // https://www.geeksforgeeks.org/program-distance-two-points-earth/
+  // Haversine formula
+  const twoDistance = (catLat, catLng, catObj) => {
+    let clickedKat = catObj
+
+    if (clickedKat !== undefined && clickedKat.distance === null && props.userLat !==0 && props.userLong !== 0) {
+      let calcDistance = Math.floor(3963.0 * Math.acos((Math.sin((catLat/(180/Math.PI))) * Math.sin((props.userLat/(180/Math.PI)))) + Math.cos((catLat/(180/Math.PI))) * Math.cos((props.userLat/(180/Math.PI))) * Math.cos((props.userLong/(180/Math.PI)) - (catLng/(180/Math.PI)))))
+      clickedKat.distance = calcDistance
+
+      props.set_clicked_cat(clickedKat)
+    }
+  }
+
   const favoriteCat = (catObj) => {
 
     let faveCat = {
@@ -196,7 +286,9 @@ const CatCard = (props) => {
       }
     }
 
-    fetch('http://localhost:3000/cats', {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/cats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -225,7 +317,9 @@ const CatCard = (props) => {
       }
     })[0].dbId
 
-    fetch(`http://localhost:3000/cats/${unfavedCatId}`, {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/cats/${unfavedCatId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

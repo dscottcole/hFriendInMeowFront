@@ -53,7 +53,9 @@ const Profile = (props) => {
     let [password_confirmationE, setPasswordConfirmationE] = useState('');
 
     const getUserId = () => {
-        fetch('http://localhost:3000/getid', {
+        let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+        fetch(`${fetchUrl}/getid`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +70,9 @@ const Profile = (props) => {
     }
 
     const getUserInfo = (id) => {
-        fetch(`http://localhost:3000/users/${id}`, {
+        let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+        fetch(`${fetchUrl}/users/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -149,7 +153,9 @@ const Profile = (props) => {
     }
 
     const editUser = (updatedUser) => {
-        fetch(`http://localhost:3000/users/${user_id}`, {
+        let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+        fetch(`${fetchUrl}/users/${user_id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

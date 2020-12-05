@@ -75,7 +75,9 @@ const Login = (props) => {
     }
 
     const logIn = (user) => {
-        fetch('http://localhost:3000/login', {
+        let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+        fetch(`${fetchUrl}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
