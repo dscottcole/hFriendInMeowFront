@@ -1,69 +1,31 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A cat adoption and cat breed information application created with a ReduxJS frontend and Rails backend.
 
-## Available Scripts
+Full App Video: https://youtu.be/nwljO7tNEL4
 
-In the project directory, you can run:
+API List:
 
-### `yarn start`
+Cat Breeds: https://thecatapi.com/ Cat Breed Images: https://thecatapi.com/ Random Cat Images: https://thecatapi.com/ Adoptable Pets: https://www.petfinder.com/ Adoptable Pet Organizations: https://www.petfinder.com/ Google Maps: https://developers.google.com/maps/documentation/javascript/adding-a-google-map Geocoding API: https://developers.google.com/maps/documentation/geocoding/overview Reverse Geocoding API: https://developers.google.com/maps/documentation/geocoding/overview
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Frontend:
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+[x] Auth [ ] Tests [x] Interacting with a complex API [x] Redux [x] Custom CSS [x] One significant refactor
 
-### `yarn test`
+Backend:
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+[x] Auth [ ] Tests [ ] Multiple has_many_through relationships [ ] Seeds from a complex data set [x] Custom routes [x] Custom controller/model methods [ ] Basic database query optimizations [ ] Background jobs for slow actions [ ] Sockets or email integration [x] One significant refactor [x] Validation
 
-### `yarn build`
+DB Tables:
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+/users /cats
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+User: { username: string name: string email: string password_digest: text password_confirmation: text }
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Cat: { name: string petfinder_id: string user_id: integer }
 
-### `yarn eject`
+Client-Side Routes:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+/signup /login /profile /breeds /adoptable /favorites
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+User Stories:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
-# hFriendInMeowFront
+Sign up for an account Log in with your account Edit account info/credentials Get information about all cat breeds See all cat breeds that are available to adopt Search/Filter cats by certain traits See all adoptable cats from your chosen breed See the location/organization of the current cat in your search on a google map Add/remove cats to your favorites Infinite scrolling cat image feed
