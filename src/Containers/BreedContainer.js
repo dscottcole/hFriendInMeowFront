@@ -25,7 +25,9 @@ const BreedContainer = (props) => {
     const breedLimit = 20
 
     const getBreedsKey = () => {
-        fetch('http://localhost:3000/breeds')
+      let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+      fetch(`${fetchUrl}/breeds`)
         .then(res => res.json())
         .then(obj => {
             getBreeds(obj.api_key)

@@ -25,7 +25,9 @@ const CatsFaveButton = (props) => {
       }
     }
 
-    fetch('http://localhost:3000/cats', {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/cats`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -54,7 +56,9 @@ const CatsFaveButton = (props) => {
       }
     })[0].dbId
 
-    fetch(`http://localhost:3000/cats/${unfavedCatId}`, {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/cats/${unfavedCatId}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

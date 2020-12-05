@@ -34,7 +34,9 @@ const CatContainer = (props) => {
   }
 
   const getAdoptableKeys = () => {
-    fetch('http://localhost:3000/adoptable')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable`)
       .then(res => res.json())
       .then(obj => getAdoptableToken(obj.api_key, obj.secret_key))
   }
@@ -71,6 +73,101 @@ const CatContainer = (props) => {
         props.set_cats(res.animals)
         props.set_cats_total(res.pagination.total_count)
         props.set_cats_pages(res.pagination.total_pages)
+      })
+      .catch(() => {
+        getAdoptableKeys2()
+      })
+  }
+
+  const getAdoptableKeys2 = () => {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable2`)
+      .then(res => res.json())
+      .then(obj => getAdoptableToken2(obj.api_key, obj.secret_key))
+  }
+
+  const getAdoptableToken2 = (apiKey, secretKey) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => getAdoptableCats2(token.access_token))
+  }
+
+  const getAdoptableCats2 = (accessToken) => {
+    let catUrl = ''
+
+    if (props.userPostalCode.toString().length < 5) {
+      catUrl = `https://api.petfinder.com/v2/animals?type=cat&page=${props.adoptableCatsPage}&breed=${props.filterBreed}&gender=${props.filterGender}&age=${props.filterAge}`
+    } else if (props.userPostalCode.toString().length === 5) {
+      catUrl = `https://api.petfinder.com/v2/animals?type=cat&sort=distance&location=${props.userPostalCode}&distance=${props.userRadius}&breed=${props.filterBreed}&gender=${props.filterGender}&age=${props.filterAge}&page=${props.adoptableCatsPage}`
+    }
+    fetch(catUrl, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        props.set_cats(res.animals)
+        props.set_cats_total(res.pagination.total_count)
+        props.set_cats_pages(res.pagination.total_pages)
+      })
+      .catch(() => {
+        getAdoptableKeys3()
+      })
+  }
+
+  const getAdoptableKeys3 = () => {
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/adoptable3`)
+      .then(res => res.json())
+      .then(obj => getAdoptableToken3(obj.api_key, obj.secret_key))
+  }
+
+  const getAdoptableToken3 = (apiKey, secretKey) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => getAdoptableCats3(token.access_token))
+  }
+
+  const getAdoptableCats3 = (accessToken) => {
+    let catUrl = ''
+
+    if (props.userPostalCode.toString().length < 5) {
+      catUrl = `https://api.petfinder.com/v2/animals?type=cat&page=${props.adoptableCatsPage}&breed=${props.filterBreed}&gender=${props.filterGender}&age=${props.filterAge}`
+    } else if (props.userPostalCode.toString().length === 5) {
+      catUrl = `https://api.petfinder.com/v2/animals?type=cat&sort=distance&location=${props.userPostalCode}&distance=${props.userRadius}&breed=${props.filterBreed}&gender=${props.filterGender}&age=${props.filterAge}&page=${props.adoptableCatsPage}`
+    }
+    fetch(catUrl, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        props.set_cats(res.animals)
+        props.set_cats_total(res.pagination.total_count)
+        props.set_cats_pages(res.pagination.total_pages)
+      })
+      .catch((error) => {
+        console.log("error:", error)
       })
   }
 

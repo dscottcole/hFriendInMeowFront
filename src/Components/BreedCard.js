@@ -37,13 +37,17 @@ const BreedCard = (props) => {
   let [breedImg, setImg] = useState('')
 
   const getBreedsKey = () => {
-    fetch('http://localhost:3000/breeds')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/breeds`)
       .then(res => res.json())
       .then(obj => getBreedImage(obj.api_key))
   }
 
   const getBreedsKey2 = () => {
-    fetch('http://localhost:3000/breeds')
+    let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+    fetch(`${fetchUrl}/breeds`)
       .then(res => res.json())
       .then(obj => getBreedImage2(obj.api_key))
   }
@@ -76,7 +80,9 @@ const BreedCard = (props) => {
 
   const getAdoptableKeys = (breedName) => {
     if (props.adoptableBreedNames.includes(breedName)) {
-      fetch('http://localhost:3000/adoptable')
+      let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+      fetch(`${fetchUrl}/adoptable`)
         .then(res => res.json())
         .then(obj => getAdoptableToken(obj.api_key, obj.secret_key, breedName))
     }
@@ -117,6 +123,109 @@ const BreedCard = (props) => {
       .then(res => {
         setTotalAdoptable(res.pagination.total_count)
       })
+      .catch(() => {
+        getAdoptableKeys2(breedName)
+      });
+  }
+
+  const getAdoptableKeys2 = (breedName) => {
+    if (props.adoptableBreedNames.includes(breedName)) {
+      let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+      fetch(`${fetchUrl}/adoptable2`)
+        .then(res => res.json())
+        .then(obj => getAdoptableToken2(obj.api_key, obj.secret_key, breedName))
+    }
+  }
+
+  const getAdoptableToken2 = (apiKey, secretKey, breedName) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => {
+        getAdoptableCats2(token.access_token, breedName)
+      })
+  }
+
+  const getAdoptableCats2 = (accessToken, breedName) => {
+    let slug = ''
+
+    if (props.userPostalCode.toString().length === 5) {
+      slug = `&location=${props.userPostalCode}&breed=${breedName}&distance=${props.userRadius}`
+    } else if (props.userPostalCode.toString().length < 5) {
+      slug = `&breed=${breedName}`
+    }
+
+
+    fetch(`https://api.petfinder.com/v2/animals?type=cat${slug}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        setTotalAdoptable(res.pagination.total_count)
+      })
+      .catch(() => {
+        getAdoptableKeys3(breedName)
+      });
+  }
+
+  const getAdoptableKeys3 = (breedName) => {
+    if (props.adoptableBreedNames.includes(breedName)) {
+      let fetchUrl = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://friendinmeow2.herokuapp.com'
+
+      fetch(`${fetchUrl}/adoptable3`)
+        .then(res => res.json())
+        .then(obj => getAdoptableToken3(obj.api_key, obj.secret_key, breedName))
+    }
+  }
+
+  const getAdoptableToken3 = (apiKey, secretKey, breedName) => {
+    fetch("https://api.petfinder.com/v2/oauth2/token", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&client_id=${apiKey}&client_secret=${secretKey}`
+    })
+      .then(res => res.json())
+      .then(token => {
+        getAdoptableCats3(token.access_token, breedName)
+      })
+  }
+
+  const getAdoptableCats3 = (accessToken, breedName) => {
+    let slug = ''
+
+    if (props.userPostalCode.toString().length === 5) {
+      slug = `&location=${props.userPostalCode}&breed=${breedName}&distance=${props.userRadius}`
+    } else if (props.userPostalCode.toString().length < 5) {
+      slug = `&breed=${breedName}`
+    }
+
+
+    fetch(`https://api.petfinder.com/v2/animals?type=cat${slug}`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    })
+      .then(res => res.json())
+      .then(res => {
+        setTotalAdoptable(res.pagination.total_count)
+      })
+      .catch(error => {
+        console.log('error:', error);
+      });
   }
 
   useEffect(() => {
