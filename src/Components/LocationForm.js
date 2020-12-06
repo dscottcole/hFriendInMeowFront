@@ -146,7 +146,6 @@ const LocationForm = (props) => {
   }
 
   const getZip = (lat, long) => {
-    console.log(process.env.REACT_APP_googleKey)
     fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_googleKey}`)
       .then(res => res.json())
       .then(address => setZip(address))
