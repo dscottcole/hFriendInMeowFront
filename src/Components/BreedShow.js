@@ -79,36 +79,34 @@ const BreedShow = (props) => {
 
   return (
     <div className="full-breed">
-      <div className={classes.root}>
-        <Grid className={classes.container} container spacing={3}>
-          <div className="breed-name-pic">
-            <Typography className={classes.header} gutterBottom variant="h2" component="h2">
-              {breed.name}
-            </Typography>
-            <img className="breed-show-pic" src={props.clickedBreedImg} alt="BreedImg" ></img>
-          </div>
-          <div className="breed-info">
-            <Typography variant="h6" color="textPrimary" component="h6">
-              {breed.temperament}
-            </Typography>
-            <Divider className={classes.dividerFullWidth} variant="fullWidth" />
-            <Typography variant="body1" color="textPrimary" component="p">
-              {breed.description}
-            </Typography>
-            <Divider className={classes.dividerFullWidth} variant="fullWidth" />
-            {breed.alt_names !== "" ? altNames : null}
-            {breed.cfa_url !== undefined ? cfaUrl : null}
-            {breed.wikipedia_url !== undefined ? wikipediaUrl : null}
-            {breed.vcahospitals_url !== undefined ? vcaUrl : null}
-          </div>
-        </Grid>
-        <TraitTable />
-        <BreedChart />
-        <div className="breed-show-buttons">
-          <BreedsBackButton />
-          {props.adoptableBreedNames.includes(props.clickedBreed.name) && props.clickedBreedTotalAdoptable > 0 ?
-            <BreedsQueryButton /> : null}
+      <Grid className={classes.container} container spacing={3}>
+        <div className="breed-name-pic">
+          <Typography className={classes.header} gutterBottom variant="h2" component="h2">
+            {breed.name}
+          </Typography>
+          <img className="breed-show-pic" src={props.clickedBreedImg} alt="BreedImg" ></img>
         </div>
+        <div className="breed-info">
+          <Typography variant="h6" color="textPrimary" component="h6">
+            {breed.temperament}
+          </Typography>
+          <Divider className={classes.dividerFullWidth} variant="fullWidth" />
+          <Typography variant="body1" color="textPrimary" component="p">
+            {breed.description}
+          </Typography>
+          <Divider className={classes.dividerFullWidth} variant="fullWidth" />
+          {breed.alt_names !== "" ? altNames : null}
+          {breed.cfa_url !== undefined ? cfaUrl : null}
+          {breed.wikipedia_url !== undefined ? wikipediaUrl : null}
+          {breed.vcahospitals_url !== undefined ? vcaUrl : null}
+        </div>
+      </Grid>
+      <TraitTable />
+      <BreedChart />
+      <div className="breed-show-buttons">
+        <BreedsBackButton />
+        {props.adoptableBreedNames.includes(props.clickedBreed.name) && props.clickedBreedTotalAdoptable > 0 ?
+          <BreedsQueryButton /> : null}
       </div>
     </div>
   );
